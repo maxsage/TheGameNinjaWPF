@@ -1,0 +1,71 @@
+﻿<Window x:Class="TheGameNinja.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:videoGame="clr-namespace:TheGameNinja.Desktop.VideoGames"
+        xmlns:accolade="clr-namespace:TheGameNinja.Desktop.Accolades"
+        xmlns:prep="clr-namespace:TheGameNinja.Desktop.AccoladePrep"
+        xmlns:local="clr-namespace:TheGameNinja.Desktop"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="http://www.codeplex.com/prism"
+        Title="MainWindow"
+        WindowState="Maximized">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type videoGame:VideoGameListViewModel}">
+            <videoGame:VideoGameListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type prep:AccoladePrepViewModel}">
+            <prep:AccoladePrepView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type videoGame:AddEditVideoGameViewModel}">
+            <videoGame:AddEditVideoGameView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type accolade:AddEditAccoladeViewModel}">
+            <accolade:AddEditAccoladeView />
+        </DataTemplate>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"></prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="NavBar">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Content="VideoGames"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="videoGames"
+                    Grid.Column="0" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding CurrentUser}"></TextBlock>
+   
+            <Button Grid.Column="2" Margin="5" Content="Say Hello" 
+                    Command="{Binding NotificationCommand}" /> 
+            
+            <Button Content="AccoladePrep"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="accoladePrep"
+                    Grid.Column="3" />
+            <TextBlock Grid.ColumnSpan="4" Grid.Row="1" Text="{Binding Status}" Margin="25" HorizontalAlignment="Center"></TextBlock>
+        </Grid>
+        <Grid x:Name="MainContent"
+              Grid.Row="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
+    </Grid>
+</Window>

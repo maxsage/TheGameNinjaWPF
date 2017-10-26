@@ -1,0 +1,311 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+             xmlns:Data="clr-namespace:TheGameNinja.Data;assembly=TheGameNinja.Data"
+             xmlns:conv="clr-namespace:TheGameNinja.Desktop.Converters"
+             x:Class="TheGameNinja.Desktop.VideoGames.AddEditVideoGameView"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <ei:CallMethodAction TargetObject="{Binding}" MethodName="LoadGenres"/>
+            <ei:CallMethodAction TargetObject="{Binding}" MethodName="LoadMediaTypes"/>
+            <ei:CallMethodAction TargetObject="{Binding}" MethodName="LoadPlatforms"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <UserControl.Resources>
+        <conv:NegatableBooleanToVisibilityConverter x:Key="VisConverter" />
+        <conv:NegatableBooleanToVisibilityConverter x:Key="NegVisConverter"
+                                                    Negate="True" />
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                                    Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <Grid x:Name="grid1"
+              HorizontalAlignment="Left"
+              DataContext="{Binding VideoGame}"
+              Margin="10,10,0,0"
+              VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Name:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="0"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="nameTextBox"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="0"
+                     Text="{Binding Name, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="Auto" />
+            <Label Content="Description:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="1"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="description"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Margin="3"
+                     Grid.Row="1"
+                     Text="{Binding Description, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     MinLines="3"
+                     MaxLines="5"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Width="360"
+                     AcceptsReturn="True"/>
+            <Label Content="Genre:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="2"
+                   VerticalAlignment="Center" />
+            <ComboBox Name="genres" 
+                      Grid.Column="1" 
+                      HorizontalAlignment="Left"
+                      Height="23"
+                      Margin="3,9,0,0"
+                      Grid.Row="2" 
+                      ItemsSource="{Binding RelativeSource={RelativeSource
+                        Mode=FindAncestor, AncestorType={x:Type Window}}, 
+                        Path=DataContext.CurrentViewModel.Genres}" 
+                      VerticalAlignment="Top" 
+                      Width="155"  
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding GenreId}"/>
+            <Label Content="Platform:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="3"
+                   VerticalAlignment="Center" />
+            <ComboBox Name="platforms" 
+                      Grid.Column="1" 
+                      HorizontalAlignment="Left"
+                      Height="23"
+                      Margin="3"
+                      Grid.Row="3" 
+                      ItemsSource="{Binding RelativeSource={RelativeSource
+                        Mode=FindAncestor, AncestorType={x:Type Window}}, 
+                        Path=DataContext.CurrentViewModel.Platforms}" 
+                      VerticalAlignment="Top" 
+                      Width="155"  
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding PlatformId}"/>
+            <Label Content="Media Type:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="4"
+                   VerticalAlignment="Center" />
+            <ComboBox Name="mediaTypes" 
+                      Grid.Column="1" 
+                      HorizontalAlignment="Left"
+                      Height="23"
+                      Margin="3"
+                      Grid.Row="4" 
+                      ItemsSource="{Binding RelativeSource={RelativeSource
+                        Mode=FindAncestor, AncestorType={x:Type Window}}, 
+                        Path=DataContext.CurrentViewModel.MediaTypes}" 
+                      VerticalAlignment="Top" 
+                      Width="155"  
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding MediaTypeId}"/>
+            <Label Content="Image Url:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="5"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="imageUrl"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="5"
+                     Text="{Binding ImageUrl, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="420" />
+            <Label Content="Date Purchased:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="6"
+                   VerticalAlignment="Center" />
+            <DatePicker x:Name="datePurchased"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="6"
+                     SelectedDate="{Binding DatePurchased, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+            <Label Content="Date Released:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="7"
+                   VerticalAlignment="Center" />
+            <DatePicker x:Name="dateReleased"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="7"
+                     SelectedDate="{Binding DateReleased, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+            <Label Content="Notes:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="8"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="notes"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Margin="3"
+                     Grid.Row="8"
+                     Text="{Binding Notes, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     MinLines="3"
+                     MaxLines="5"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Width="360"
+                     AcceptsReturn="True"/>
+            <Label Content="Rating:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="9"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="rating"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="9"
+                     Text="{Binding Rating, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+            <Label Content="Multiplayer Rating:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="10"
+                   VerticalAlignment="Center" />
+            <TextBox x:Name="multiplayerRating"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="10"
+                     Text="{Binding MultiplayerRating, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+            <Label Content="Currently Playing:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="11"
+                   VerticalAlignment="Center" />
+            <CheckBox x:Name="currentlyPlaying"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="11"
+                     IsChecked="{Binding CurrentlyPlaying, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+            <Label Content="Completed:"
+                   Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Margin="3"
+                   Grid.Row="12"
+                   VerticalAlignment="Center" />
+            <CheckBox x:Name="completed"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     Height="23"
+                     Margin="3"
+                     Grid.Row="12"
+                     IsChecked="{Binding Completed, ValidatesOnNotifyDataErrors=True}"
+                     VerticalAlignment="Center"
+                     Width="120" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Visibility="{Binding EditMode, Converter={StaticResource VisConverter}}"
+                    HorizontalAlignment="Left"
+                    Margin="25,5,0,0"
+                    VerticalAlignment="Top"
+                    Width="75" />
+            <Button Content="Add"
+                    Command="{Binding SaveCommand}"
+                    Visibility="{Binding EditMode, Converter={StaticResource NegVisConverter}}"
+                    HorizontalAlignment="Left"
+                    Margin="25,5,0,0"
+                    VerticalAlignment="Top"
+                    Width="75" />
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    HorizontalAlignment="Left"
+                    Margin="150,5,0,0"
+                    VerticalAlignment="Top"
+                    Width="75" />
+        </Grid>
+        <Image Grid.Row="2" Source="C:\AchievementImages\AssassinsCreedII_WelcometotheAnimus20.jpg" Stretch="None"></Image>
+    </Grid>
+</UserControl>

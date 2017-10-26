@@ -1,0 +1,120 @@
+﻿<UserControl
+    x:Class="TheGameNinja.Desktop.VideoGames.VideoGameListView" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+             xmlns:local="clr-namespace:TheGameNinja.Desktop.Converters"
+             
+             mc:Ignorable="d" 
+                d:DesignHeight="300" 
+                d:DesignWidth="300"
+    >
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="Loaded">
+			<ei:CallMethodAction TargetObject="{Binding}" MethodName="LoadVideoGames"/>
+		</i:EventTrigger>
+	</i:Interaction.Triggers>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+        <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+        <SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo" />
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:TextInputToVisibilityConverter x:Key="TextInputToVisibilityConverter" />
+
+        <Style x:Key="EntryFieldStyle" TargetType="Grid" >
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="20,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="Add VideoGame" Command="{Binding AddVideoGameCommand}" Grid.Column="0" HorizontalAlignment="Left" />
+            <CheckBox IsChecked="{Binding ShowCurrentlyPlaying}" Grid.Column="1" >Show Playing</CheckBox>
+            <CheckBox IsChecked="{Binding HideDLC}" Grid.Column="2" >Hide DLC</CheckBox>
+            <Grid HorizontalAlignment="Right" Grid.Column="3" Background="{StaticResource brushWatermarkBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Search:" Grid.Column="0" />
+                <TextBlock Grid.Column="1" Text="Type at least 3 characters..." Foreground="{StaticResource brushWatermarkForeground}"
+                    Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty,
+                          Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <TextBox Grid.Column="1" Background="Transparent" Name="txtSearch" Text="{Binding SearchInput, UpdateSourceTrigger=PropertyChanged, Delay=300}" Width="150" />
+                
+                <Button Grid.Column="2" Content="X" Command="{Binding ClearSearchCommand}" />
+            </Grid>
+        </Grid>
+        <DataGrid ItemsSource="{Binding VideoGames}"
+                  SelectedItem="{Binding SelectedVideoGame, Delay=300}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  Grid.Row="1">
+            <!--<DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="Tomato"></Setter>
+                    <Setter Property="Command"  Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                Path=DataContext.GridSortCommand}"/>
+                    <Setter Property="CommandParameter" Value="{Binding Path=Content, RelativeSource={RelativeSource Self}}"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>-->
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Width="Auto" Header="Name"/>
+                <DataGridTextColumn Binding="{Binding Genre.Name}" Width="Auto" Header="GenreId" />
+                <DataGridTextColumn Binding="{Binding Platform.Name}" Width="Auto" Header="PlatformId" />
+                <DataGridTextColumn Binding="{Binding MediaType.Name}" Width="Auto" Header="MediaTypeId" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader Content="ImageUrl" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Grid.Row="2" Source="{Binding ImageUrl}" Stretch="None"></Image>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding DatePurchased, StringFormat=d}" Width="Auto" Header="DatePurchased" />
+                <DataGridTextColumn Binding="{Binding DateReleased, StringFormat=d}" Width="Auto" Header="DateReleased" />
+                <DataGridTextColumn Binding="{Binding Rating}" Width="Auto" Header="Rating" />
+                <DataGridTextColumn Binding="{Binding MultiplayerRating}" Width="Auto" Header="MultiplayerRating" />
+                <DataGridCheckBoxColumn Binding="{Binding CurrentlyPlaying}" Width="Auto" Header="CurrentlyPlaying" />
+                <DataGridCheckBoxColumn Binding="{Binding Completed}" Width="Auto" Header="Completed" />
+
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Edit"
+                                    Command="{Binding DataContext.EditVideoGameCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+		</DataGrid>
+        <Border Grid.Row="2">
+            <Button Content="Save VideoGames" Command="{Binding SaveVideoGamesCommand}" Margin="10" />
+        </Border>
+	</Grid>
+</UserControl>
